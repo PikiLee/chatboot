@@ -1,0 +1,36 @@
+{
+  "name": "package-name",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/src/index.js",
+  "type": "module",
+  "packageManager": "pnpm@7.26.1",
+  "scripts": {
+    "lint": "eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix .",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "build": "rimraf dist && tsc",
+    "prepack": "pnpm run build",
+    "dev": "tsx ./src/index.ts --watch"
+  },
+  "files": [
+    "dist/src/*"
+  ],
+  "types": "dist/src/index.d.ts",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4",
+    "rimraf": "^4.1.2",
+    "tsx": "^3.12.3",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4",
+    "vitest": "^0.27.2"
+  }
+}
