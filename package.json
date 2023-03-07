@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "openai": "^3.2.1",
-    "uuid": "^9.0.0"
+    "openai": "^3.2.1"
   }
 }

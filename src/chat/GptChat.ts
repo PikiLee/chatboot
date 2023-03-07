@@ -7,11 +7,9 @@ import {
 	OpenAIApi,
 	type ChatCompletionRequestMessage,
 } from 'openai'
-import { v4 as uuid } from 'uuid'
 
 export class GptChat implements Chat {
 	protected openai: OpenAIApi
-	protected chatHistory: Record<string, string[]> = {}
 
 	constructor() {
 		const configuration = new Configuration({
@@ -41,24 +39,15 @@ export class GptChat implements Chat {
 		return transformedMessages
 	}
 
-	public startChat(): string {
-		const id = uuid()
-		this.chatHistory[id] = []
-		return id
-	}
+	async ask(messages: string[] | string): Promise<string> {
+		if (messages.length === 0) throw new Error('Message is empty.')
+		if (typeof messages === 'string') {
+			messages = [messages]
+		}
 
-	public endChat(chatId: string): void {
-		delete this.chatHistory[chatId]
-	}
-
-	async ask(chatId: string, message: string): Promise<string> {
-		if (!this.chatHistory[chatId]) throw new Error('Chat not found.')
-		if (message.length === 0) throw new Error('Message is empty.')
-
-		const newHistory = [...this.chatHistory[chatId], message]
 		const response = await this.openai.createChatCompletion({
 			model: 'gpt-3.5-turbo-0301',
-			messages: this.transformMessages(newHistory),
+			messages: this.transformMessages(messages),
 			temperature: 0,
 			max_tokens: 7,
 		})
@@ -68,8 +57,6 @@ export class GptChat implements Chat {
 			response.data.choices[0].message
 		) {
 			const newMessage = response.data.choices[0].message.content
-			newHistory.push(newMessage)
-			this.chatHistory[chatId] = newHistory
 			return newMessage
 		}
 

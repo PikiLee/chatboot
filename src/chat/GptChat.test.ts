@@ -4,9 +4,7 @@ import { GptChat } from './GptChat'
 describe('GptChat', () => {
 	it('should return a response', async () => {
 		const chat = new GptChat()
-		const chatId = chat.startChat()
-		const response = await chat.ask(chatId, 'Hello')
-		chat.endChat(chatId)
+		const response = await chat.ask(['Hello'])
 		expect(typeof response).toBe('string')
 	})
 })
