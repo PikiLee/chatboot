@@ -32,7 +32,7 @@ export abstract class Chatbot {
 			if (messages.length === 0) {
 				// Wait longer if no messages
 				this.timeToWait = Math.min(
-					Math.max(Math.random(), 0.5) *
+					Math.max(Math.random(), 0.75) *
 						(this.timeToWait + this.BASE_TIME_TO_WAIT),
 					this.MAX_TIME_TO_WAIT
 				)
