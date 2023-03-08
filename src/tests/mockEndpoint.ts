@@ -9,7 +9,7 @@ interface BaseMockEndpointOptions {
 }
 
 const server = setupServer()
-server.listen()
+server.listen({ onUnhandledRequest: 'error' })
 
 /**
  * Creates a mock endpoint function that can be used in a test.
