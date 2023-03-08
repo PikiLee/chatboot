@@ -22,7 +22,7 @@ export class Weibo implements Platform {
 		this.weiboXsrfToken = process.env.WEIBO_XSRF_TOKEN
 	}
 
-	async getMessages() {
+	async getMessages(): Promise<Message[]> {
 		try {
 			const response = await axios.get(
 				'https://weibo.com/ajax/statuses/mentions',

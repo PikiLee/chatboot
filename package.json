@@ -11,7 +11,8 @@
     "coverage": "vitest run --coverage",
     "build": "rimraf dist && tsc",
     "prepack": "pnpm run build",
-    "dev": "tsx ./src/index.ts --watch"
+    "dev": "tsx ./src/index.ts --watch",
+    "start": "node ./dist/src/index.js"
   },
   "files": [
     "dist/src/*"
