@@ -95,6 +95,7 @@ const oldMessages = [
 const BASE_URL = 'https://weibo.com'
 const MESSAGE_Path = '/ajax/statuses/mentions'
 const REPLY_PATH = '/ajax/comments/create'
+const USER_INFO_PATH = '/ajax/setting/getBasicInfo'
 
 export function hasMessages(count: number) {
 	const statuses = [...produceNewMessage(count), ...oldMessages]
@@ -122,5 +123,27 @@ export function replySucceed() {
 		status: 200,
 		httpVerb: 'post',
 		body: 'ok',
+	})
+}
+
+export function getUserNameSucceed() {
+	return baseMockEndpoint(BASE_URL, {
+		path: USER_INFO_PATH,
+		status: 200,
+		httpVerb: 'get',
+		body: {
+			data: {
+				screen_name: 'people',
+			},
+		},
+	})
+}
+
+export function getUserNameFail() {
+	return baseMockEndpoint(BASE_URL, {
+		path: USER_INFO_PATH,
+		status: 400,
+		httpVerb: 'get',
+		body: 'error',
 	})
 }

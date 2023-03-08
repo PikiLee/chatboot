@@ -8,7 +8,10 @@ export class Weibo implements Platform {
 	protected messages: Message[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
+	protected userAgent =
+		'Mozilla/5.0 (Windows NT 10.1; WOW64) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/54.0.1108.113 Safari/535'
 	protected lastPullTime = new Date().getTime()
+	protected username = ''
 
 	constructor() {
 		if (!process.env.WEIBO_COOKIE) {
@@ -22,8 +25,31 @@ export class Weibo implements Platform {
 		this.weiboXsrfToken = process.env.WEIBO_XSRF_TOKEN
 	}
 
-	protected removeAt(content: string): string {
-		return content.replaceAll(/@.*?[^ ]+ /g, '')
+	protected async removeAt(content: string): Promise<string> {
+		try {
+			const userName = this.username ?? (await this.getUserName())
+			const regex = new RegExp(`@${userName}[^ ]+`, 'g')
+			return content.replaceAll(regex, '')
+		} catch {
+			return content
+		}
+	}
+
+	protected async getUserName(): Promise<string> {
+		const res = await axios.get(
+			'https://weibo.com/ajax/setting/getBasicInfo',
+			{
+				headers: {
+					'x-xsrf-token': this.weiboXsrfToken,
+					cookie: this.weiboCookie,
+					'User-Agent': this.userAgent,
+				},
+			}
+		)
+
+		this.username = res.data.data.screen_name
+
+		return this.username
 	}
 
 	async getMessages(): Promise<Message[]> {
@@ -34,8 +60,7 @@ export class Weibo implements Platform {
 					headers: {
 						cookie: this.weiboCookie,
 						'x-xsrf-token': this.weiboXsrfToken,
-						'User-Agent':
-							'Mozilla/5.0 (Windows NT 10.1; WOW64) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/54.0.1108.113 Safari/535',
+						'User-Agent': this.userAgent,
 					},
 				}
 			)
@@ -48,7 +73,7 @@ export class Weibo implements Platform {
 				if (createdAt > this.lastPullTime) {
 					messages.push({
 						id: status.id,
-						content: this.removeAt(status.text_raw),
+						content: await this.removeAt(status.text_raw),
 					})
 
 					if (createdAt > maxCreatedAt) {
@@ -77,8 +102,7 @@ export class Weibo implements Platform {
 					'content-type': 'application/x-www-form-urlencoded',
 					'x-xsrf-token': this.weiboXsrfToken,
 					cookie: this.weiboCookie,
-					'User-Agent':
-						'Mozilla/5.0 (Windows NT 10.1; WOW64) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/54.0.1108.113 Safari/535',
+					'User-Agent': this.userAgent,
 				},
 				method: 'POST',
 				body: `id=${id}&comment=${message}&pic_id=&is_repost=0&comment_ori=0&is_comment=0`,
