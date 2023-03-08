@@ -3,6 +3,9 @@ Every post that @you would get a reply from chatgpt.
 
 + Now only support Weibo
 
+# Screenshot
+![Screenshot](./assets/screenshot1.png)
+
 # Usage
 ## Docker
 ```
