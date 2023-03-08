@@ -1,14 +1,26 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import { Chat } from '../chat/index.js'
 import { Platform } from '../platform/index.js'
 
 export abstract class Chatbot {
-	protected BASE_TIME_TO_WAIT = 1000 // 10 seconds
-	protected MAX_TIME_TO_WAIT = 600000 // 10 minutes
+	protected BASE_TIME_TO_WAIT: number
+	protected MAX_TIME_TO_WAIT: number
 	protected platform: Platform
 	protected chat: Chat
-	protected timeToWait = this.BASE_TIME_TO_WAIT
+	protected timeToWait: number
 
 	constructor() {
+		if (process.env.BASE_TIME_TO_WAIT === undefined)
+			throw new Error('BASE_TIME_TO_WAIT is not defined.')
+		this.BASE_TIME_TO_WAIT = parseInt(process.env.BASE_TIME_TO_WAIT)
+		this.timeToWait = this.BASE_TIME_TO_WAIT
+
+		if (process.env.MAX_TIME_TO_WAIT === undefined)
+			throw new Error('MAX_TIME_TO_WAIT is not defined.')
+		this.MAX_TIME_TO_WAIT = parseInt(process.env.MAX_TIME_TO_WAIT)
+
 		this.platform = this.createPlatform()
 		this.chat = this.createChat()
 	}
