@@ -65,18 +65,24 @@ export class Weibo implements Platform {
 	}
 
 	async sendMessage(id: string, message: string) {
-		this.messages = this.messages.filter((message) => message.id !== id)
-		fetch('https://weibo.com/ajax/comments/create', {
-			headers: {
-				accept: 'application/json, text/plain, */*',
-				'content-type': 'application/x-www-form-urlencoded',
-				'x-xsrf-token': this.weiboXsrfToken,
-				cookie: this.weiboCookie,
-				'User-Agent':
-					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-			},
-			method: 'POST',
-			body: `id=${id}&comment=${message}&pic_id=&is_repost=0&comment_ori=0&is_comment=0`,
-		})
+		if (message.length > 140) {
+			for (let i = 0; i < message.length; i += 140) {
+				await this.sendMessage(id, message.slice(i, i + 140))
+			}
+		} else {
+			this.messages = this.messages.filter((message) => message.id !== id)
+			await fetch('https://weibo.com/ajax/comments/create', {
+				headers: {
+					accept: 'application/json, text/plain, */*',
+					'content-type': 'application/x-www-form-urlencoded',
+					'x-xsrf-token': this.weiboXsrfToken,
+					cookie: this.weiboCookie,
+					'User-Agent':
+						'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+				},
+				method: 'POST',
+				body: `id=${id}&comment=${message}&pic_id=&is_repost=0&comment_ori=0&is_comment=0`,
+			})
+		}
 	}
 }
