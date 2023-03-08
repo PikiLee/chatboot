@@ -35,7 +35,7 @@ export class Weibo implements Platform {
 						cookie: this.weiboCookie,
 						'x-xsrf-token': this.weiboXsrfToken,
 						'User-Agent':
-							'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+							'Mozilla/5.0 (Windows NT 10.1; WOW64) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/54.0.1108.113 Safari/535',
 					},
 				}
 			)
@@ -78,7 +78,7 @@ export class Weibo implements Platform {
 					'x-xsrf-token': this.weiboXsrfToken,
 					cookie: this.weiboCookie,
 					'User-Agent':
-						'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+						'Mozilla/5.0 (Windows NT 10.1; WOW64) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/54.0.1108.113 Safari/535',
 				},
 				method: 'POST',
 				body: `id=${id}&comment=${message}&pic_id=&is_repost=0&comment_ori=0&is_comment=0`,
