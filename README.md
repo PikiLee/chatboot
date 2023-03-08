@@ -23,7 +23,7 @@ pnpm run start
 ## Docker
 ```
 docker run 
-    -v ./.env:/app.env 
+    -v ./.env:/app/.env 
     -e OPENAI_API_KEY=YOUR_KEY
     -e WEIBO_COOKIE=YOUR_COOKIE
     -e WEIBO_XSRF_TOKEN=YOUR_XSRF_TOKEN
