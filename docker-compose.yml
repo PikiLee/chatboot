@@ -1,0 +1,6 @@
+version: '3'
+services:
+  chatboot:
+    image: pikilee/chatboot
+    volumes:
+      - ./env:/app/.env
