@@ -2,12 +2,13 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { Message, Platform } from './Platform'
+import axios from 'axios'
 
 export class Weibo implements Platform {
 	protected messages: Message[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
-	protected lastPullTime = 0
+	protected lastPullTime = new Date().getTime()
 
 	constructor() {
 		if (!process.env.WEIBO_COOKIE) {
@@ -23,7 +24,7 @@ export class Weibo implements Platform {
 
 	async getMessages() {
 		try {
-			const response = await fetch(
+			const response = await axios.get(
 				'https://weibo.com/ajax/statuses/mentions',
 				{
 					headers: {
@@ -32,11 +33,10 @@ export class Weibo implements Platform {
 				}
 			)
 
-			const data = await response.json()
+			const data = response.data
 			const messages = []
-			console.log({ data: data.data.statuses })
 			let maxCreatedAt = this.lastPullTime
-			for (const status of data.data.statuses.slice(0, 1)) {
+			for (const status of data.data.statuses) {
 				const createdAt = new Date(status.created_at).getTime()
 				if (createdAt > this.lastPullTime) {
 					messages.push({
@@ -51,7 +51,6 @@ export class Weibo implements Platform {
 			}
 			this.lastPullTime = maxCreatedAt
 			this.messages = messages
-			console.log({ messages })
 			return messages
 		} catch (e) {
 			return []
@@ -60,7 +59,7 @@ export class Weibo implements Platform {
 
 	async sendMessage(id: string, message: string) {
 		this.messages = this.messages.filter((message) => message.id !== id)
-		fetch('https://weibo.com/ajax/comments/create', {
+		axios.post('https://weibo.com/ajax/comments/create', {
 			headers: {
 				accept: 'application/json, text/plain, */*',
 				'content-type': 'application/x-www-form-urlencoded',
@@ -68,7 +67,6 @@ export class Weibo implements Platform {
 				cookie: this.weiboCookie,
 			},
 			body: `id=${id}&comment=${message}&pic_id=&is_repost=0&comment_ori=0&is_comment=0`,
-			method: 'POST',
 		})
 	}
 }
