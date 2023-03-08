@@ -54,8 +54,8 @@ MAX_TIME_TO_WAIT=180000
 + You can find them in the network tab of browser dev tools when you are surfing weibo.
 
 ### BASE_TIME_TO_WAIT
-+ The default time interval to pull data from weibo.
++ The default time interval in milliseconds  to pull data from weibo.
 + The interval would increase every time there is no data avaible and decrease to `BASE_TIME_TO_WAIT` every time there is data available.
 
 ### MAX_TIME_TO_WAIT
-+ The interval to pull data would not supress `MAX_TIME_TO_WAIT`
++ The interval in milliseconds to pull data would not supress `MAX_TIME_TO_WAIT`
