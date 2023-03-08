@@ -12,6 +12,7 @@ export class OpenAiChatBackend implements Backend {
 	protected openai: OpenAIApi
 
 	constructor() {
+		if (!process.env.OPENAI_API_KEY) throw new Error('No API key provided.')
 		const configuration = new Configuration({
 			apiKey: process.env.OPENAI_API_KEY,
 		})

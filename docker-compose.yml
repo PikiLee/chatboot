@@ -3,7 +3,7 @@ services:
   chatboot:
     image: pikilee/chatboot
     volumes:
-      - ./env:/app/.env
+      - ./.env:/app/.env
     environment:
       - BASE_TIME_TO_WAIT=10000
       - MAX_TIME_TO_WAIT=600000
