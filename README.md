@@ -7,6 +7,18 @@ Every post that @you would get a reply from chatgpt.
 ![Screenshot](./assets/screenshot1.png)
 
 # Usage
+## pnpm
+```
+// install dependency
+pnpm install
+
+// build app
+pnpm run build
+
+// start app
+pnpm run start
+```
+
 ## Docker
 ```
 docker run 
