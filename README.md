@@ -1,5 +1,5 @@
 A self-host chatGpt bot.
-Every post that @you would get a reply from chatgpt.
+Every post that @ the bot would get a reply from chatgpt.
 
 + Now only support Weibo
 
