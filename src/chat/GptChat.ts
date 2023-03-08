@@ -49,7 +49,6 @@ export class GptChat implements Chat {
 			model: 'gpt-3.5-turbo-0301',
 			messages: this.transformMessages(messages),
 			temperature: 0,
-			max_tokens: 7,
 		})
 
 		if (

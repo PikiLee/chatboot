@@ -1,13 +1,12 @@
-import { Chat } from '../chat'
-import { Platform } from '../platform'
-
-const BASE_TIME_TO_WAIT = 10000 // 10 seconds
-const MAX_TIME_TO_WAIT = 600000 // 10 minutes
+import { Chat } from '../chat/index.js'
+import { Platform } from '../platform/index.js'
 
 export abstract class Chatbot {
+	protected BASE_TIME_TO_WAIT = 1000 // 10 seconds
+	protected MAX_TIME_TO_WAIT = 600000 // 10 minutes
 	protected platform: Platform
 	protected chat: Chat
-	protected timeToWait = BASE_TIME_TO_WAIT
+	protected timeToWait = this.BASE_TIME_TO_WAIT
 
 	constructor() {
 		this.platform = this.createPlatform()
@@ -17,16 +16,23 @@ export abstract class Chatbot {
 	async run() {
 		while (true) {
 			const messages = await this.platform.getMessages()
-			if (messages.length === 0)
+			console.log({ messages })
+			if (messages.length === 0) {
 				this.timeToWait = Math.min(
-					this.timeToWait * 2,
-					MAX_TIME_TO_WAIT
+					this.timeToWait + this.BASE_TIME_TO_WAIT,
+					this.MAX_TIME_TO_WAIT
 				)
-			else {
-				this.timeToWait = BASE_TIME_TO_WAIT
+				console.log('No messages, waiting for', this.timeToWait, 'ms')
+			} else {
+				this.timeToWait = this.BASE_TIME_TO_WAIT
 				for (const message of messages) {
-					const response = await this.chat.ask(message.content)
-					this.platform.sendMessage(message.id, response)
+					try {
+						const response = await this.chat.ask(message.content)
+						console.log({ response })
+						this.platform.sendMessage(message.id, response)
+					} catch (err) {
+						console.error(err)
+					}
 				}
 			}
 			await new Promise((resolve) => setTimeout(resolve, this.timeToWait))

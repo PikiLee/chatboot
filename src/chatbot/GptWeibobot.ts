@@ -1,5 +1,5 @@
-import { Chat, GptChat } from '../chat'
-import { Platform, Weibo } from '../platform'
+import { Chat, GptChat } from '../chat/index.js'
+import { Platform, Weibo } from '../platform/index.js'
 import { Chatbot } from './Chatbot.js'
 
 export class GptWeiboBot extends Chatbot {
