@@ -1,2 +1,2 @@
-export * from './Chat'
-export * from './GptChat'
+export * from './Chat.js'
+export * from './GptChat.js'
