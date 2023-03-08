@@ -85,6 +85,7 @@ export class Weibo implements Platform {
 			this.messages = messages
 			return messages
 		} catch (e) {
+			console.log('Error', e)
 			return []
 		}
 	}

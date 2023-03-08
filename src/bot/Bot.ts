@@ -28,37 +28,30 @@ export abstract class Bot {
 	async run() {
 		while (true) {
 			const messages = await this.platform.getMessages()
-			if (messages.length > 0)
-				if (messages.length === 0) {
-					await new Promise((resolve) =>
-						setTimeout(resolve, this.timeToWait)
-					)
-					// Wait longer if no messages
-					this.timeToWait = Math.min(
-						Math.max(Math.random(), 0.75) *
-							(this.timeToWait + this.BASE_TIME_TO_WAIT),
-						this.MAX_TIME_TO_WAIT
-					)
-					console.log(
-						'No messages, waiting for',
-						this.timeToWait,
-						'ms'
-					)
-				} else {
-					this.timeToWait = this.BASE_TIME_TO_WAIT
-					console.log('Got messages: ', messages)
-					for (const message of messages) {
-						try {
-							const response = await this.backend.ask(
-								message.content
-							)
-							console.log('Response:', response)
-							this.platform.sendMessage(message.id, response)
-						} catch (err) {
-							console.error(err)
-						}
+			if (messages.length === 0) {
+				await new Promise((resolve) =>
+					setTimeout(resolve, this.timeToWait)
+				)
+				// Wait longer if no messages
+				this.timeToWait = Math.min(
+					Math.max(Math.random(), 0.75) *
+						(this.timeToWait + this.BASE_TIME_TO_WAIT),
+					this.MAX_TIME_TO_WAIT
+				)
+				console.log('No messages, waiting for', this.timeToWait, 'ms')
+			} else {
+				this.timeToWait = this.BASE_TIME_TO_WAIT
+				console.log('Got messages: ', messages)
+				for (const message of messages) {
+					try {
+						const response = await this.backend.ask(message.content)
+						console.log('Response:', response)
+						this.platform.sendMessage(message.id, response)
+					} catch (err) {
+						console.error(err)
 					}
 				}
+			}
 		}
 	}
 
