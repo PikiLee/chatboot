@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Weibo } from './Weibo'
+import { Weibo } from './Weibo.js'
 import {
 	replySucceed,
 	hasMessages,

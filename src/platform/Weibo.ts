@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { Message, Platform } from './Platform'
+import { Message, Platform } from './Platform.js'
 import axios from 'axios'
 
 export class Weibo implements Platform {

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { Chat } from './Chat'
+import { Chat } from './Chat.js'
 import {
 	Configuration,
 	OpenAIApi,

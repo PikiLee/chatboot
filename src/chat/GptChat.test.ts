@@ -1,6 +1,6 @@
 import { askSucceed } from './Gpt.preconditions.js'
 import { describe, it, expect } from 'vitest'
-import { GptChat } from './GptChat'
+import { GptChat } from './GptChat.js'
 
 describe('GptChat', () => {
 	it('should return a response', async () => {
