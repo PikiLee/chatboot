@@ -7,8 +7,8 @@ import { Platform } from '../platform/index.js'
 export abstract class Bot {
 	protected BASE_TIME_TO_WAIT: number
 	protected MAX_TIME_TO_WAIT: number
-	protected platform: Platform
-	protected chat: Backend
+	platform: Platform
+	backend: Backend
 	protected timeToWait: number
 
 	constructor() {
@@ -22,7 +22,7 @@ export abstract class Bot {
 		this.MAX_TIME_TO_WAIT = parseInt(process.env.MAX_TIME_TO_WAIT)
 
 		this.platform = this.createPlatform()
-		this.chat = this.createBackend()
+		this.backend = this.createBackend()
 	}
 
 	async run() {
@@ -41,7 +41,7 @@ export abstract class Bot {
 				this.timeToWait = this.BASE_TIME_TO_WAIT
 				for (const message of messages) {
 					try {
-						const response = await this.chat.ask(message.content)
+						const response = await this.backend.ask(message.content)
 						console.log('Response:', response)
 						this.platform.sendMessage(message.id, response)
 					} catch (err) {

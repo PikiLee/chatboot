@@ -48,7 +48,7 @@ export class OpenAiChatBackend implements Backend {
 		const response = await this.openai.createChatCompletion({
 			model: 'gpt-3.5-turbo-0301',
 			messages: this.transformMessages(messages),
-			temperature: 0,
+			temperature: 0.6,
 		})
 
 		if (

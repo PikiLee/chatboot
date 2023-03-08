@@ -1,5 +1,6 @@
+import { OpenAiCompletionWeibobot } from './OpenAiCompletionWeibobot'
 import { describe, it } from 'vitest'
-import { askSucceed } from '../backend/OpenAiChatBackend/OpenAiChatBackend.preconditions.js'
+import { askSucceed } from '../backend/Backend.preconditions.js'
 import { hasMessages, replySucceed } from '../platform/Weibo.preconditions.js'
 import { OpenAiChatWeiboBot } from './OpenAiChatWeiboBot.js'
 
@@ -8,14 +9,14 @@ function sleep(milliseconds: number) {
 }
 
 describe('Chatbot', () => {
-	it(
+	it.each([OpenAiChatWeiboBot, OpenAiCompletionWeibobot])(
 		'should run',
-		async () => {
+		async (Bot) => {
 			hasMessages(2)
 			replySucceed()
-			askSucceed()
 
-			const bot = new OpenAiChatWeiboBot()
+			const bot = new Bot()
+			askSucceed(bot.backend)
 			bot.run()
 
 			await sleep(8000)
