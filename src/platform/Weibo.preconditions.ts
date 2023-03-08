@@ -1,22 +1,28 @@
 import { baseMockEndpoint } from '../tests/mockEndpoint.js'
 
-const newMessages = [
-	{
-		id: '0',
-		text_raw: 'Hei?',
-		created_at: '2030-02-13T12:30:00.000Z',
-	},
-	{
-		id: '1',
-		text_raw: 'How are you?',
-		created_at: '2028-02-13T12:30:00.000Z',
-	},
-	{
-		id: '2',
-		text_raw: 'What is your name?',
-		created_at: '2029-03-01T09:45:00.000Z',
-	},
-]
+function produceNewMessage(count: number) {
+	const TEN_SECONDS = 10000
+
+	const produceFutrueDate = () =>
+		new Date().getTime() + Math.random() * TEN_SECONDS
+	return [
+		{
+			id: '0',
+			text_raw: 'Hei?',
+			created_at: produceFutrueDate(),
+		},
+		{
+			id: '1',
+			text_raw: 'How are you?',
+			created_at: produceFutrueDate(),
+		},
+		{
+			id: '2',
+			text_raw: 'What is your name?',
+			created_at: produceFutrueDate(),
+		},
+	].slice(0, count)
+}
 
 const oldMessages = [
 	{
@@ -91,7 +97,7 @@ const MESSAGE_Path = '/ajax/statuses/mentions'
 const REPLY_PATH = '/ajax/comments/create'
 
 export function hasMessages(count: number) {
-	const statuses = [...newMessages.slice(0, count), ...oldMessages]
+	const statuses = [...produceNewMessage(count), ...oldMessages]
 	return baseMockEndpoint(BASE_URL, {
 		path: MESSAGE_Path,
 		body: {
