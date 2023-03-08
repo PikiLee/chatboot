@@ -18,8 +18,10 @@ export abstract class Chatbot {
 			const messages = await this.platform.getMessages()
 			console.log({ messages })
 			if (messages.length === 0) {
+				// Wait longer if no messages
 				this.timeToWait = Math.min(
-					this.timeToWait + this.BASE_TIME_TO_WAIT,
+					Math.max(Math.random(), 0.5) *
+						(this.timeToWait + this.BASE_TIME_TO_WAIT),
 					this.MAX_TIME_TO_WAIT
 				)
 				console.log('No messages, waiting for', this.timeToWait, 'ms')
