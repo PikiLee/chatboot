@@ -13,12 +13,12 @@ function produceNewMessage(count: number) {
 		},
 		{
 			id: '1',
-			text_raw: 'How are you?',
+			text_raw: 'How are @people you ?',
 			created_at: produceFutrueDate(),
 		},
 		{
 			id: '2',
-			text_raw: 'What is your name?',
+			text_raw: 'What is your name @people?',
 			created_at: produceFutrueDate(),
 		},
 	].slice(0, count)

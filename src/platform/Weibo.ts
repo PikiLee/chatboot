@@ -22,6 +22,10 @@ export class Weibo implements Platform {
 		this.weiboXsrfToken = process.env.WEIBO_XSRF_TOKEN
 	}
 
+	protected removeAt(content: string): string {
+		return content.replaceAll(/@.*?[^ ]+ /g, '')
+	}
+
 	async getMessages(): Promise<Message[]> {
 		try {
 			const response = await axios.get(
@@ -44,7 +48,7 @@ export class Weibo implements Platform {
 				if (createdAt > this.lastPullTime) {
 					messages.push({
 						id: status.id,
-						content: status.text_raw,
+						content: this.removeAt(status.text_raw),
 					})
 
 					if (createdAt > maxCreatedAt) {
