@@ -1,3 +1,3 @@
 export interface Chat {
-	ask(messages: string[]): Promise<string>
+	ask(messages: string[] | string): Promise<string>
 }
