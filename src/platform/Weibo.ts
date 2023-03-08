@@ -77,7 +77,7 @@ export class Weibo implements Platform {
 					})
 
 					if (createdAt > maxCreatedAt) {
-						maxCreatedAt = status.created_at
+						maxCreatedAt = createdAt
 					}
 				}
 			}
