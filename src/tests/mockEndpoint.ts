@@ -1,6 +1,12 @@
-import { curry } from 'lodash-es'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
+
+interface BaseMockEndpointOptions {
+	path?: string
+	status?: number
+	body?: string | object
+	httpVerb?: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options'
+}
 
 const server = setupServer()
 server.listen()
@@ -11,15 +17,16 @@ server.listen()
  */
 export const baseMockEndpoint = (
 	baseUrl: string,
-	path: string,
-	status: number,
-	body: string | object
+	{
+		path = '',
+		status = 200,
+		body = '',
+		httpVerb = 'get',
+	}: BaseMockEndpointOptions = {}
 ) => {
 	server.use(
-		rest.get(`${baseUrl}${path}`, (req, res, ctx) => {
+		rest[httpVerb](`${baseUrl}${path}`, (req, res, ctx) => {
 			return res(ctx.status(status), ctx.json(body))
 		})
 	)
 }
-
-export const curriedMockEndpoint = curry(baseMockEndpoint)

@@ -1,4 +1,4 @@
-import { curriedMockEndpoint } from '../tests/mockEndpoint'
+import { baseMockEndpoint } from '../tests/mockEndpoint.js'
 
 const newMessages = [
 	{
@@ -86,28 +86,35 @@ const oldMessages = [
 	},
 ]
 
-const mockGet = curriedMockEndpoint(
-	'https://weibo.com',
-	'/ajax/statuses/mentions'
-)
-const mockCreate = curriedMockEndpoint(
-	'https://weibo.com',
-	'/ajax/comments/create'
-)
+const BASE_URL = 'https://weibo.com'
+const MESSAGE_Path = '/ajax/statuses/mentions'
+const REPLY_PATH = '/ajax/comments/create'
 
 export function hasMessages(count: number) {
 	const statuses = [...newMessages.slice(0, count), ...oldMessages]
-	return mockGet(200, {
-		data: {
-			statuses,
+	return baseMockEndpoint(BASE_URL, {
+		path: MESSAGE_Path,
+		body: {
+			data: {
+				statuses,
+			},
 		},
 	})
 }
 
 export function hasMessagesFail() {
-	return mockGet(400, 'error')
+	return baseMockEndpoint(BASE_URL, {
+		path: MESSAGE_Path,
+		status: 400,
+		body: 'error',
+	})
 }
 
 export function replySucceed() {
-	return mockCreate(200, 'ok')
+	return baseMockEndpoint(BASE_URL, {
+		path: REPLY_PATH,
+		status: 200,
+		httpVerb: 'post',
+		body: 'ok',
+	})
 }
