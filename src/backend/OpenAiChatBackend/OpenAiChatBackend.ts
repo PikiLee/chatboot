@@ -1,14 +1,14 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { Chat } from './Chat.js'
+import { Backend } from '../Backend.js'
 import {
 	Configuration,
 	OpenAIApi,
 	type ChatCompletionRequestMessage,
 } from 'openai'
 
-export class GptChat implements Chat {
+export class OpenAiChatBackend implements Backend {
 	protected openai: OpenAIApi
 
 	constructor() {

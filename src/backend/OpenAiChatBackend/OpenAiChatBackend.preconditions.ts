@@ -1,4 +1,4 @@
-import { baseMockEndpoint } from '../tests/mockEndpoint.js'
+import { baseMockEndpoint } from '../../tests/mockEndpoint.js'
 
 const BASE_URL = 'https://api.openai.com/v1'
 const CHAT_PATH = '/chat/completions'

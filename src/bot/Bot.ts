@@ -1,14 +1,14 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { Chat } from '../chat/index.js'
+import { Backend } from '../backend/index.js'
 import { Platform } from '../platform/index.js'
 
-export abstract class Chatbot {
+export abstract class Bot {
 	protected BASE_TIME_TO_WAIT: number
 	protected MAX_TIME_TO_WAIT: number
 	protected platform: Platform
-	protected chat: Chat
+	protected chat: Backend
 	protected timeToWait: number
 
 	constructor() {
@@ -22,7 +22,7 @@ export abstract class Chatbot {
 		this.MAX_TIME_TO_WAIT = parseInt(process.env.MAX_TIME_TO_WAIT)
 
 		this.platform = this.createPlatform()
-		this.chat = this.createChat()
+		this.chat = this.createBackend()
 	}
 
 	async run() {
@@ -53,6 +53,6 @@ export abstract class Chatbot {
 		}
 	}
 
-	abstract createChat(): Chat
+	abstract createBackend(): Backend
 	abstract createPlatform(): Platform
 }

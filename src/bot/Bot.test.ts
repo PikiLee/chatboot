@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest'
-import { askSucceed } from '../chat/Gpt.preconditions.js'
+import { askSucceed } from '../backend/OpenAiChatBackend/OpenAiChatBackend.preconditions.js'
 import { hasMessages, replySucceed } from '../platform/Weibo.preconditions.js'
-import { GptWeiboBot } from './GptWeibobot.js'
+import { OpenAiChatWeiboBot } from './OpenAiChatWeiboBot.js'
 
 function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -9,14 +9,14 @@ function sleep(milliseconds: number) {
 
 describe('Chatbot', () => {
 	it(
-		'should create a chatbot',
+		'should run',
 		async () => {
 			hasMessages(2)
 			replySucceed()
 			askSucceed()
 
-			const chatbot = new GptWeiboBot()
-			chatbot.run()
+			const bot = new OpenAiChatWeiboBot()
+			bot.run()
 
 			await sleep(8000)
 

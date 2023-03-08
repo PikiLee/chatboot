@@ -1,4 +1,4 @@
-import { GptWeiboBot } from './chatbot/index.js'
+import { OpenAiChatWeiboBot } from './bot/index.js'
 
-const chatbot = new GptWeiboBot()
+const chatbot = new OpenAiChatWeiboBot()
 chatbot.run()
