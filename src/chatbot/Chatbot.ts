@@ -16,7 +16,7 @@ export abstract class Chatbot {
 	async run() {
 		while (true) {
 			const messages = await this.platform.getMessages()
-			console.log({ messages })
+			if (messages.length > 0) console.log('Got messages: ', messages)
 			if (messages.length === 0) {
 				// Wait longer if no messages
 				this.timeToWait = Math.min(
@@ -30,7 +30,7 @@ export abstract class Chatbot {
 				for (const message of messages) {
 					try {
 						const response = await this.chat.ask(message.content)
-						console.log({ response })
+						console.log('Response:', response)
 						this.platform.sendMessage(message.id, response)
 					} catch (err) {
 						console.error(err)
