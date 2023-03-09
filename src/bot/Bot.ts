@@ -29,6 +29,7 @@ export abstract class Bot {
 		while (true) {
 			const messages = await this.platform.getMessages()
 			if (messages.length === 0) {
+				console.log('No messages, waiting for', this.timeToWait, 'ms')
 				await new Promise((resolve) =>
 					setTimeout(resolve, this.timeToWait)
 				)
@@ -38,7 +39,6 @@ export abstract class Bot {
 						(this.timeToWait + this.BASE_TIME_TO_WAIT),
 					this.MAX_TIME_TO_WAIT
 				)
-				console.log('No messages, waiting for', this.timeToWait, 'ms')
 			} else {
 				this.timeToWait = this.BASE_TIME_TO_WAIT
 				console.log('Got messages: ', messages)

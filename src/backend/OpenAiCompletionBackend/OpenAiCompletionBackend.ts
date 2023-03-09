@@ -20,6 +20,7 @@ export class OpenAiCompletionBackend implements Backend {
 			model: 'text-davinci-003',
 			prompt: messages,
 			temperature: 0.6,
+			max_tokens: 2000,
 		})
 
 		if (response.data.choices.length > 0 && response.data.choices[0].text) {
