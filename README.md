@@ -27,6 +27,7 @@ docker run
     -e OPENAI_API_KEY=YOUR_KEY
     -e WEIBO_COOKIE=YOUR_COOKIE
     -e WEIBO_XSRF_TOKEN=YOUR_XSRF_TOKEN
+    -e BOT_TYPE=0
     -e BASE_TIME_TO_WAIT=10000
     -e MAX_TIME_TO_WAIT=180000
     pikilee/chatboot:latest
@@ -40,18 +41,23 @@ docker run
 docker compose up -d
 ```
 
-# .env
+## .env
 Here is the example of a .env file
 ```
 OPENAI_API_KEY=YOUR_KEY
 WEIBO_COOKIE=YOUR_COOKIE
 WEIBO_XSRF_TOKEN=YOUR_XSRF_TOKEN
+BOT_TYPE=0
 BASE_TIME_TO_WAIT=10000
 MAX_TIME_TO_WAIT=180000
 ```
 
 ### WEIBO_COOKIE，WEIBO_XSRF_TOKEN
 + You can find them in the network tab of browser dev tools when you are surfing weibo.
+
+### BOT_TYPE
++ `0` for OpenAiChatWeibobot
++ `1` for OpenAiCompenletionWeibobot
 
 ### BASE_TIME_TO_WAIT
 + The default time interval in milliseconds  to pull data from weibo.
