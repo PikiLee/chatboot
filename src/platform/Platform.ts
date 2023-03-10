@@ -2,7 +2,7 @@ import { Observer, Subject } from '../Observer/index.js'
 
 export interface MessageContext {
 	message: string | string[]
-	sendMessage: (message: string) => Promise<void>
+	sendMessage: (response: string) => void
 }
 
 export abstract class Platform implements Subject {
