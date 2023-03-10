@@ -4,10 +4,14 @@ dotenv.config()
 import { Message, Platform } from './Platform.js'
 import axios from 'axios'
 
+interface MessageCache extends Message {
+	cachedAt: number
+}
+
 export class Weibo extends Platform {
 	protected messages: Message[] = []
 	// messges that have been sent out through getMessages()
-	protected messageCaches: Message[] = []
+	protected messageCaches: MessageCache[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
 	protected userAgent =
@@ -123,8 +127,17 @@ export class Weibo extends Platform {
 	}
 
 	getMessages(): Message[] {
-		// todo discard messages that have not been replied to for a while
-		this.messageCaches = this.messageCaches.concat(this.messages)
+		this.messageCaches = this.messageCaches.concat(
+			// @ts-expect-error cachedAt is added to the message
+			this.messages.map((m) => {
+				;(m as MessageCache).cachedAt = new Date().getTime()
+				return m
+			})
+		)
+		this.messageCaches = this.messageCaches.filter(
+			(message) =>
+				new Date().getTime() - message.cachedAt > 1000 * 60 * 10 // 10 minutes
+		)
 		return this.messages
 	}
 
