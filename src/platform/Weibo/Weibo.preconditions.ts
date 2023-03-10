@@ -1,4 +1,4 @@
-import { baseMockEndpoint } from '../tests/mockEndpoint.js'
+import { baseMockEndpoint } from '../../tests/mockEndpoint.js'
 
 function produceNewMessage(count: number) {
 	const TEN_SECONDS = 10000
