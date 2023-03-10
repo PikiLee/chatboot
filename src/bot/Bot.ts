@@ -3,9 +3,9 @@ dotenv.config()
 
 import { Backend } from '../backend/index.js'
 import { Observer } from '../Observer/index.js'
-import { Platform } from '../platform/index.js'
+import { Platform, type MessageContextList } from '../platform/index.js'
 
-export abstract class Bot implements Observer {
+export abstract class Bot implements Observer<MessageContextList> {
 	platform: Platform
 	backend: Backend
 
@@ -16,13 +16,12 @@ export abstract class Bot implements Observer {
 		this.platform.registerObserver(this)
 	}
 
-	async update() {
+	async update(state: MessageContextList) {
 		try {
-			const messageContexts = await this.platform.getMessageContexts()
-			for (const messageContext of messageContexts) {
-				const response = await this.backend.ask(messageContext.message)
+			for (const context of state) {
+				const response = await this.backend.ask(context.message)
 				console.log('Response:', response)
-				messageContext.sendMessage(response)
+				context.sendMessage(response)
 			}
 		} catch (err) {
 			console.error(err)

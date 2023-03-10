@@ -1,7 +1,10 @@
 import { OpenAiCompletionWeibobot } from './OpenAiCompletionWeibobot'
 import { describe, it } from 'vitest'
-import { askSucceed } from '../backend/index.js'
-import { hasMessages, replySucceed } from '../platform/index.js'
+import { askSucceed } from '../backend/Backend.preconditions.js'
+import {
+	hasMessages,
+	replySucceed,
+} from '../platform/Weibo/Weibo.preconditions.js'
 import { OpenAiChatWeiboBot } from './OpenAiChatWeiboBot.js'
 
 function sleep(milliseconds: number) {

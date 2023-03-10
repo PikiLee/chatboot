@@ -1,7 +1,7 @@
 import { Observer } from './Observer.js'
 
-export interface Subject {
-	registerObserver(observer: Observer): void
-	removeObserver(observer: Observer): void
-	notifyObservers(): void
+export interface Subject<T> {
+	registerObserver(observer: Observer<T>): void
+	removeObserver(observer: Observer<T>): void
+	notifyObservers(state: T): void
 }

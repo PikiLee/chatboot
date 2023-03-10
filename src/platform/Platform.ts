@@ -5,23 +5,23 @@ export interface MessageContext {
 	sendMessage: (response: string) => void
 }
 
-export abstract class Platform implements Subject {
-	protected observers: Observer[] = []
+export type MessageContextList = MessageContext[]
 
-	abstract getMessageContexts(): MessageContext[]
+export abstract class Platform implements Subject<MessageContextList> {
+	protected observers: Observer<MessageContextList>[] = []
 
-	registerObserver(observer: Observer): void {
+	registerObserver(observer: Observer<MessageContextList>): void {
 		this.observers.push(observer)
 	}
 
-	removeObserver(observer: Observer): void {
+	removeObserver(observer: Observer<MessageContextList>): void {
 		const index = this.observers.indexOf(observer)
 		if (index >= 0) this.observers.splice(index, 1)
 	}
 
-	notifyObservers(): void {
+	notifyObservers(state: MessageContextList): void {
 		for (const observer of this.observers) {
-			observer.update()
+			observer.update(state)
 		}
 	}
 }

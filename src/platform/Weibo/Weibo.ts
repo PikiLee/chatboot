@@ -1,11 +1,10 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { MessageContext, Platform } from '../Platform.js'
+import { Platform } from '../Platform.js'
 import axios from 'axios'
 
 export class Weibo extends Platform {
-	protected messageContexts: MessageContext[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
 	protected userAgent =
@@ -74,10 +73,9 @@ export class Weibo extends Platform {
 				}
 			}
 			this.lastPullTime = maxCreatedAt
-			this.messageContexts = messageContexts
 			if (messageContexts.length > 0) {
 				console.log('Got messages:', messageContexts)
-				this.notifyObservers()
+				this.notifyObservers(messageContexts)
 			}
 		} catch (e) {
 			console.log('Error', e)
@@ -119,10 +117,6 @@ export class Weibo extends Platform {
 		this.username = res.data.data.screen_name
 
 		return this.username
-	}
-
-	getMessageContexts(): MessageContext[] {
-		return this.messageContexts
 	}
 
 	async sendMessage(id: string, message: string) {

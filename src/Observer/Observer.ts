@@ -1,3 +1,3 @@
-export interface Observer {
-	update(): void
+export interface Observer<T> {
+	update(state: T): Promise<void>
 }
