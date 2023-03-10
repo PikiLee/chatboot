@@ -32,7 +32,7 @@ export class Weibo extends Platform {
 		} else {
 			const interval = 5000 * Math.random() + 7500
 			console.log(`Checking for new messages in ${interval}ms`)
-			setInterval(async () => {
+			setTimeout(() => {
 				this.retrieveMessages()
 				this.listenForMessages()
 			}, interval)
@@ -119,7 +119,7 @@ export class Weibo extends Platform {
 		return this.username
 	}
 
-	async sendMessage(id: string, message: string) {
+	protected async sendMessage(id: string, message: string) {
 		if (message.length > 140) {
 			for (let i = 0; i < message.length; i += 140) {
 				await this.sendMessage(id, message.slice(i, i + 140))
