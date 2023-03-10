@@ -19,10 +19,17 @@ export class Weibo implements Platform {
 		}
 		this.weiboCookie = process.env.WEIBO_COOKIE
 
-		if (!process.env.WEIBO_XSRF_TOKEN) {
-			throw new Error('WEIBO_XSRF_TOKEN is not set')
+		this.weiboXsrfToken = this.getXsrfToken(this.weiboCookie)
+	}
+
+	protected getXsrfToken(cookie: string) {
+		const regex = /XSRF-TOKEN=(.+?);/
+		const match = cookie.match(regex)
+		if (match) {
+			return match[1]
+		} else {
+			throw new Error('XSRF token not found in cookie')
 		}
-		this.weiboXsrfToken = process.env.WEIBO_XSRF_TOKEN
 	}
 
 	protected async removeAt(content: string): Promise<string> {
