@@ -4,8 +4,10 @@ dotenv.config()
 import { Message, Platform } from './Platform.js'
 import axios from 'axios'
 
-export class Weibo implements Platform {
+export class Weibo extends Platform {
 	protected messages: Message[] = []
+	// messges that have been sent out through getMessages()
+	protected messageCaches: Message[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
 	protected userAgent =
@@ -14,12 +16,73 @@ export class Weibo implements Platform {
 	protected username = ''
 
 	constructor() {
+		super()
 		if (!process.env.WEIBO_COOKIE) {
 			throw new Error('WEIBO_COOKIE is not set')
 		}
 		this.weiboCookie = process.env.WEIBO_COOKIE
 
 		this.weiboXsrfToken = this.getXsrfToken(this.weiboCookie)
+
+		this.listenForMessages({ immediate: true })
+	}
+
+	// listen for new messages for a certain interval
+	protected listenForMessages({ immediate }: { immediate?: boolean } = {}) {
+		if (immediate) {
+			this.retrieveMessages()
+			this.listenForMessages()
+		} else {
+			const interval = 5000 * Math.random() + 7500
+			console.log(`Checking for new messages in ${interval}ms`)
+			setInterval(async () => {
+				this.retrieveMessages()
+				this.listenForMessages()
+			}, interval)
+		}
+	}
+
+	/**
+	 * Retrieve messages from Weibo, and notify observers if there are new messages
+	 */
+	protected async retrieveMessages() {
+		try {
+			const response = await axios.get(
+				'https://weibo.com/ajax/statuses/mentions',
+				{
+					headers: {
+						cookie: this.weiboCookie,
+						'x-xsrf-token': this.weiboXsrfToken,
+						'User-Agent': this.userAgent,
+					},
+				}
+			)
+
+			const data = response.data
+			const messages = []
+			let maxCreatedAt = this.lastPullTime
+			for (const status of data.data.statuses) {
+				const createdAt = new Date(status.created_at).getTime()
+				if (createdAt > this.lastPullTime) {
+					messages.push({
+						id: status.id,
+						content: await this.removeAt(status.text_raw),
+					})
+
+					if (createdAt > maxCreatedAt) {
+						maxCreatedAt = createdAt
+					}
+				}
+			}
+			this.lastPullTime = maxCreatedAt
+			this.messages = messages
+			if (messages.length > 0) {
+				console.log('Got messages:', messages)
+				this.notifyObservers()
+			}
+		} catch (e) {
+			console.log('Error', e)
+		}
 	}
 
 	protected getXsrfToken(cookie: string) {
@@ -59,42 +122,10 @@ export class Weibo implements Platform {
 		return this.username
 	}
 
-	async getMessages(): Promise<Message[]> {
-		try {
-			const response = await axios.get(
-				'https://weibo.com/ajax/statuses/mentions',
-				{
-					headers: {
-						cookie: this.weiboCookie,
-						'x-xsrf-token': this.weiboXsrfToken,
-						'User-Agent': this.userAgent,
-					},
-				}
-			)
-
-			const data = response.data
-			const messages = []
-			let maxCreatedAt = this.lastPullTime
-			for (const status of data.data.statuses) {
-				const createdAt = new Date(status.created_at).getTime()
-				if (createdAt > this.lastPullTime) {
-					messages.push({
-						id: status.id,
-						content: await this.removeAt(status.text_raw),
-					})
-
-					if (createdAt > maxCreatedAt) {
-						maxCreatedAt = createdAt
-					}
-				}
-			}
-			this.lastPullTime = maxCreatedAt
-			this.messages = messages
-			return messages
-		} catch (e) {
-			console.log('Error', e)
-			return []
-		}
+	getMessages(): Message[] {
+		// todo discard messages that have not been replied to for a while
+		this.messageCaches = this.messageCaches.concat(this.messages)
+		return this.messages
 	}
 
 	async sendMessage(id: string, message: string) {
@@ -103,7 +134,9 @@ export class Weibo implements Platform {
 				await this.sendMessage(id, message.slice(i, i + 140))
 			}
 		} else {
-			this.messages = this.messages.filter((message) => message.id !== id)
+			this.messageCaches = this.messageCaches.filter(
+				(message) => message.id !== id
+			)
 			await fetch('https://weibo.com/ajax/comments/create', {
 				headers: {
 					accept: 'application/json, text/plain, */*',

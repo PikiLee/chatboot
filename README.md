@@ -27,8 +27,6 @@ docker run
     -e OPENAI_API_KEY=YOUR_KEY
     -e WEIBO_COOKIE=YOUR_COOKIE
     -e BOT_TYPE=0
-    -e BASE_TIME_TO_WAIT=10000
-    -e MAX_TIME_TO_WAIT=180000
     pikilee/chatboot:latest
 ```
 
@@ -46,8 +44,6 @@ Here is the example of a .env file
 OPENAI_API_KEY=YOUR_KEY
 WEIBO_COOKIE=YOUR_COOKIE
 BOT_TYPE=0
-BASE_TIME_TO_WAIT=10000
-MAX_TIME_TO_WAIT=180000
 ```
 
 ### WEIBO_COOKIE
@@ -56,10 +52,3 @@ MAX_TIME_TO_WAIT=180000
 ### BOT_TYPE
 + `0` for OpenAiChatWeibobot
 + `1` for OpenAiCompenletionWeibobot
-
-### BASE_TIME_TO_WAIT
-+ The default time interval in milliseconds  to pull data from weibo.
-+ The interval would increase every time there is no data avaible and decrease to `BASE_TIME_TO_WAIT` every time there is data available.
-
-### MAX_TIME_TO_WAIT
-+ The interval in milliseconds to pull data would not supress `MAX_TIME_TO_WAIT`

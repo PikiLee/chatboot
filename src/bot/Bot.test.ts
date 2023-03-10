@@ -17,7 +17,6 @@ describe('Chatbot', () => {
 
 			const bot = new Bot()
 			askSucceed(bot.backend)
-			bot.run()
 
 			await sleep(8000)
 
