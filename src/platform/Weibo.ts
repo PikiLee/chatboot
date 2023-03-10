@@ -1,17 +1,11 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { Message, Platform } from './Platform.js'
+import { MessageContext, Platform } from './Platform.js'
 import axios from 'axios'
 
-interface MessageCache extends Message {
-	cachedAt: number
-}
-
 export class Weibo extends Platform {
-	protected messages: Message[] = []
-	// messges that have been sent out through getMessages()
-	protected messageCaches: MessageCache[] = []
+	protected messageContexts: MessageContext[] = []
 	protected weiboCookie: string
 	protected weiboXsrfToken: string
 	protected userAgent =
@@ -63,14 +57,15 @@ export class Weibo extends Platform {
 			)
 
 			const data = response.data
-			const messages = []
+			const messageContexts = []
 			let maxCreatedAt = this.lastPullTime
 			for (const status of data.data.statuses) {
 				const createdAt = new Date(status.created_at).getTime()
 				if (createdAt > this.lastPullTime) {
-					messages.push({
-						id: status.id,
-						content: await this.removeAt(status.text_raw),
+					messageContexts.push({
+						message: await this.removeAt(status.text_raw),
+						sendMessage: ((response: string) =>
+							this.sendMessage(status.id, response)).bind(this),
 					})
 
 					if (createdAt > maxCreatedAt) {
@@ -79,9 +74,9 @@ export class Weibo extends Platform {
 				}
 			}
 			this.lastPullTime = maxCreatedAt
-			this.messages = messages
-			if (messages.length > 0) {
-				console.log('Got messages:', messages)
+			this.messageContexts = messageContexts
+			if (messageContexts.length > 0) {
+				console.log('Got messages:', messageContexts)
 				this.notifyObservers()
 			}
 		} catch (e) {
@@ -126,19 +121,8 @@ export class Weibo extends Platform {
 		return this.username
 	}
 
-	getMessages(): Message[] {
-		this.messageCaches = this.messageCaches.concat(
-			// @ts-expect-error cachedAt is added to the message
-			this.messages.map((m) => {
-				;(m as MessageCache).cachedAt = new Date().getTime()
-				return m
-			})
-		)
-		this.messageCaches = this.messageCaches.filter(
-			(message) =>
-				new Date().getTime() - message.cachedAt > 1000 * 60 * 10 // 10 minutes
-		)
-		return this.messages
+	getMessageContexts(): MessageContext[] {
+		return this.messageContexts
 	}
 
 	async sendMessage(id: string, message: string) {
@@ -147,9 +131,6 @@ export class Weibo extends Platform {
 				await this.sendMessage(id, message.slice(i, i + 140))
 			}
 		} else {
-			this.messageCaches = this.messageCaches.filter(
-				(message) => message.id !== id
-			)
 			await fetch('https://weibo.com/ajax/comments/create', {
 				headers: {
 					accept: 'application/json, text/plain, */*',

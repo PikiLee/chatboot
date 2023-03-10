@@ -18,11 +18,11 @@ export abstract class Bot implements Observer {
 
 	async update() {
 		try {
-			const messages = await this.platform.getMessages()
-			for (const message of messages) {
-				const response = await this.backend.ask(message.content)
+			const messageContexts = await this.platform.getMessageContexts()
+			for (const messageContext of messageContexts) {
+				const response = await this.backend.ask(messageContext.message)
 				console.log('Response:', response)
-				this.platform.sendMessage(message.id, response)
+				messageContext.sendMessage(response)
 			}
 		} catch (err) {
 			console.error(err)

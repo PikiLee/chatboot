@@ -1,15 +1,14 @@
 import { Observer, Subject } from '../Observer/index.js'
 
-export interface Message {
-	content: string | string[]
-	id: string
+export interface MessageContext {
+	message: string | string[]
+	sendMessage: (message: string) => Promise<void>
 }
 
 export abstract class Platform implements Subject {
 	protected observers: Observer[] = []
 
-	abstract getMessages(): Message[]
-	abstract sendMessage(id: string, message: string): Promise<void>
+	abstract getMessageContexts(): MessageContext[]
 
 	registerObserver(observer: Observer): void {
 		this.observers.push(observer)
